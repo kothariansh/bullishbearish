@@ -1,0 +1,9 @@
+Problem 7. [3 points] Which of the following sets are vector spaces?
+1. The set of all integers Z = {· · · , −2, −1, 0, 1, 2, · · · }.
+2. The set of all polynomials p(x) satisfying p(0) = 1.
+3. The set of all points (x, y) ∈ R
+2
+that lie on the line x + y = 0.
+For those that are not vector spaces, give concrete examples of one of the vector space axioms
+failing. For those that are vector spaces, give a justification for why the set is closed under
+addition and scalar multiplication.
