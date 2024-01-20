@@ -1,2 +1,2 @@
 # Boilermake
-For the Boilermake hackathon
+For the Boilermake hackathon.
