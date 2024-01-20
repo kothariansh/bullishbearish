@@ -7,3 +7,31 @@ that lie on the line x + y = 0.
 For those that are not vector spaces, give concrete examples of one of the vector space axioms
 failing. For those that are vector spaces, give a justification for why the set is closed under
 addition and scalar multiplication.
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\begin{document}
+
+To determine whether a set is a vector space, we need to check if it satisfies all the vector space axioms, including closure under addition and scalar multiplication. Let's analyze each set based on these criteria:
+
+\begin{enumerate}
+    \item The set of all integers \( \mathbb{Z} = \{ \dots, -2, -1, 0, 1, 2, \dots \} \)\\
+    This set is \textbf{not} a vector space. One of the reasons is that it is not closed under scalar multiplication. \\
+    For example, consider the scalar \( \frac{1}{2} \) (which is a real number) and an integer from the set, say \( 2 \). Scalar multiplication yields \( \frac{1}{2} \cdot 2 = 1 \), which is an integer and still in the set. However, if we take \( 1 \) and multiply it by \( \frac{1}{2} \), we get \( \frac{1}{2} \cdot 1 = \frac{1}{2} \), which is not an integer and thus not in the set. This example violates the axiom of closure under scalar multiplication.
+
+    \item The set of all polynomials \( p(x) \) satisfying \( p(0) = 1 \)\\
+    This set is \textbf{not} a vector space. It is not closed under addition. \\
+    For instance, let's take two polynomials in the set, \( p_1(x) = 1 + x \) and \( p_2(x) = 1 - x \). Both satisfy \( p(0) = 1 \). However, if we add these two polynomials, we get \( p_1(x) + p_2(x) = (1 + x) + (1 - x) = 2 \). The resulting polynomial, \( p(x) = 2 \), does not satisfy \( p(0) = 1 \) (since \( p(0) = 2 \)), and thus it is not in the set. This example shows the failure of closure under addition.
+
+    \item The set of all points \( (x, y) \) in \( \mathbb{R}^2 \) that lie on the line \( x + y = 0 \)\\
+    This set is a vector space. The line \( x + y = 0 \) can be rewritten as \( y = -x \), representing all scalar multiples of the vector \( (1, -1) \). \\
+    \begin{itemize}
+        \item \textbf{Closure under addition}: If \( (x_1, y_1) \) and \( (x_2, y_2) \) are any two points on the line, then \( x_1 + y_1 = 0 \) and \( x_2 + y_2 = 0 \). Adding these points gives \( (x_1 + x_2, y_1 + y_2) \), and since \( x_1 + x_2 + y_1 + y_2 = 0 + 0 = 0 \), the sum is also on the line.
+        \item \textbf{Closure under scalar multiplication}: For any scalar \( k \) and any point \( (x, y) \) on the line, scalar multiplication gives \( k(x, y) = (kx, ky) \). Since \( x + y = 0 \), we also have \( kx + ky = k(x + y) = k \cdot 0 = 0 \), so the result is still on the line.
+    \end{itemize}
+    Therefore, among the given sets, only the set of points on the line \( x + y = 0 \) in \( \mathbb{R}^2 \) is a vector space.
+\end{enumerate}
+
+\end{document}
