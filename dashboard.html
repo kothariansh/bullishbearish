@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Analysis Dashboard</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            text-align: center;
+            z-index: 1;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+        }
+        .stock-ticker {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 2;
+        }
+        .positive { color: green; }
+        .negative { color: red; }
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin-top: 20px;
+        }
+        table {
+            width: 48%; /* Adjust the width of each table */
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            max-height: 60vh; /* Maximum height for news section */
+            overflow-y: scroll;
+            border: 2px solid transparent; /* Initially transparent border */
+            border-spacing: 0; /* Remove spacing between table cells */
+            text-align: center; /* Center-align table content */
+            transition: background-color 0.3s; /* Add transition for background color change */
+            position: relative; /* Add relative positioning */
+        }
+        table h2 {
+            margin-top: 0;
+            padding: 10px;
+            background-color: transparent;
+        }
+        table th {
+            padding: 10px;
+            background-color: transparent;
+        }
+        table td {
+            padding: 10px;
+            border: 1px solid white;
+            border-radius: 4px;
+            background-color: transparent;
+            transition: background-color 0.3s; /* Add transition for background color change */
+        }
+        /* Permanent green border for good news table */
+        table.good-news-table {
+            border-color: green;
+        }
+        /* Permanent red border for bad news table */
+        table.bad-news-table {
+            border-color: red;
+        }
+        /* Highlight container when hovering over table row */
+        table td:hover {
+            background-color: rgba(0, 128, 0, 0.2); /* Green background for good news on hover */
+            transition: background-color 0.3s; /* Add transition for background color change */
+        }
+        /* Red background for bad news on hover */
+        table.bad-news-table td:hover {
+            background-color: rgba(128, 0, 0, 0.2);
+        }
+        /* Scroll animation for revealing hidden sections */
+        .fade-in {
+            animation: fadeInAnimation ease 1s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Analysis Dashboard</h1>
+        <a href="homepage.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="sentiment.html">Sentiment Analysis</a>
+        <a href="editorial.html">Editorial Review</a>
+    </div>
+
+    <div class="dashboard">
+        <table class="good-news-table">
+            <tr>
+                <th><h2>Good News</h2></th>
+            </tr>
+            <tr>
+                <td><a href="https://www.bloomberg.com/news/articles/2024-01-19/gm-will-bring-gmc-trucks-to-china-where-sales-have-faltered">GM Will Bring GMC Trucks to China Where Sales Have Faltered</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.bloomberg.com/news/articles/2024-01-19/saudi-arabia-emerges-as-key-investor-in-electric-racing-leagues">Saudi Arabia Emerges as Key Investor in Electric Racing Leagues</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.bloomberg.com/news/articles/2024-01-20/musk-s-xai-secures-500-million-toward-1-billion-funding-goal">Musk's XAI Secures $500 Million Toward $1 Billion Funding Goal</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.bloomberg.com/news/articles/2024-01-19/china-s-scrutiny-of-shein-ipo-plan-shows-regulator-s-reach-widening">China's Scrutiny of Shein IPO Plan Shows Regulator's Reach Widening</a></td>
+            </tr>
+        </table>
+        <table class="bad-news-table">
+            <tr>
+                <th><h2>Bad News</h2></th>
+            </tr>
+            <tr>
+                <td><a href="https://www.bloomberg.com/news/articles/2024-01-19/google-deepmind-ai-scientists-in-talks-to-leave-for-french-stealth-startup">Google DeepMind AI Scientists in Talks to Leave for French Stealth Startup</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.bloomberg.com/news/articles/2024-01-19/altman-seeks-to-raise-billions-for-network-of-ai-chip-factories">Altman Seeks to Raise Billions for Network of AI Chip Factories</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.bloomberg.com/news/articles/2024-01-19/asian-chip-stocks-surge-after-tsmc-s-outlook-buoys-recovery-hope">Asian Chip Stocks Surge After TSMC's Outlook Buoys Recovery Hope</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.bloomberg.com/news/articles/2024-01-19/jpmorgan-nears-3-billion-for-private-debt-in-hunt-for-partners">JPMorgan Nears $3 Billion for Private Debt in Hunt for Partners</a></td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        // Function to fetch and display random stock data
+        function fetchStockData() {
+            var stocks = [
+                { symbol: "AAPL", change: "+1.24%" },
+                { symbol: "MSFT", change: "-0.76%" },
+                { symbol: "AMZN", change: "+2.15%" },
+                { symbol: "GOOGL", change: "-1.05%" },
+                { symbol: "FB", change: "+0.85%" }
+                // Add more stocks as needed
+            ];
+
+            var randomStock = stocks[Math.floor(Math.random() * stocks.length)];
+            document.getElementById("stockSymbol").textContent = randomStock.symbol;
+            var changeElement = document.getElementById("stockChange");
+            changeElement.textContent = randomStock.change;
+            changeElement.className = randomStock.change.startsWith("+") ? 'positive' : 'negative';
+        }
+
+        // Function to reveal hidden sections with scroll animation
+        function revealSectionsOnScroll() {
+            var newsSections = document.querySelectorAll("table");
+            var stocksSection = document.querySelector(".stocks");
+            var graphSection = document.querySelector(".graph");
+
+            window.addEventListener("scroll", function () {
+                var scrollPosition = window.scrollY + window.innerHeight;
+
+                newsSections.forEach(function (section) {
+                    if (scrollPosition > section.offsetTop) {
+                        section.classList.add("fade-in");
+                    }
+                });
+
+                if (scrollPosition > stocksSection.offsetTop) {
+                    stocksSection.classList.add("fade-in");
+                }
+
+                if (scrollPosition > graphSection.offsetTop) {
+                    graphSection.classList.add("fade-in");
+                }
+            });
+        }
+
+        fetchStockData();
+        revealSectionsOnScroll();
+    </script>
+</body>
+</html>
