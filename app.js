@@ -20,19 +20,13 @@ app.set('views', __dirname + '/views');
 
 // Routes
 app.get('/', (req, res) => {
-    res.redirect('/index');
-});
-
-// Add this route for "/index"
-app.get('/index', (req, res) => {
-    res.render('index.ejs');  // Assuming your index.ejs file is in the 'views' folder
+    res.redirect('/login');
 });
 
 // Registration route
 app.get('/register', (req, res) => {
     res.render('register.ejs');
 });
-
 
 app.post('/register', async (req, res) => {
     try {
@@ -42,16 +36,11 @@ app.post('/register', async (req, res) => {
             password: hashedPassword,
         });
         await user.save();
-
-        // Redirect to the dashboard after successful registration
-        
-        res.redirect('/login');
+        res.redirect('/');
     } catch (error) {
         res.redirect('/register');
     }
-
 });
-
 
 // Login route
 app.get('/login', (req, res) => {
@@ -68,6 +57,41 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.get('/dashboard', async (req, res) => {
+    if (req.session.user) {
+        try {
+            // Define an array of stock symbols
+            const stocks = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA'];
+
+            // Specify the desired date (YYYY-MM-DD format)
+            const desiredDate = '2023-01-20'; // Replace with your desired date
+
+            // Fetch stock data from Polygon API for the specified date
+            const stockDataPromises = stocks.map(async (symbol) => {
+                const stockResponse = await axios.get(`https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/day/${desiredDate}/${desiredDate}`, {
+                    params: {
+                        apiKey: 'IK8sNfOtObOQfYSZbuso9NBrb6Lvc0z6',
+                    },
+                });
+                return {
+                    symbol,
+                    name: 'Company Name',  // Replace with actual company name (you might need an additional API for this)
+                    price: stockResponse.data.results[0]?.c || 'N/A',
+                };
+            });
+
+            // Wait for all promises to resolve
+            const stockData = await Promise.all(stockDataPromises);
+
+            res.render('dashboard.ejs', { user: req.session.user, stockData });
+        } catch (error) {
+            console.error('Error fetching stock data:', error);
+            res.render('dashboard.ejs', { user: req.session.user, stockData: [] });
+        }
+    } else {
+        res.redirect('/login');
+    }
+});
 
 
 // Other routes...
@@ -81,18 +105,8 @@ app.post('/logout', (req, res) => {
     });
 });
 
-
-app.get('/dashboard', (req, res) => {
-    if (req.session.user) {
-        res.render('dashboard.ejs');
-    } else {
-        res.redirect('/login');
-    }
-});
-
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-

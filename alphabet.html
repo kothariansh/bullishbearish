@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        #stockChart {
+            max-width: 3000px;
+            width: 300%;
+            height: auto;
+        }
+        .stock-table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .nav-item:hover {
+        background-color: white;
+        color: black;
+    }
+        .stock-table td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid white;
+        }
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin-top: 20px;
+        }
+        .news-table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 60%;
+            margin: 0 10px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            overflow-y: auto;
+            border: 2px solid transparent;
+            padding: 1000px;
+        }
+        .news-table td {
+            text-align: center; /* Center-align text in table cells */
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 4px;
+    background-color: transparent;
+    color: white; /* Ensuring text color is white */
+    transition: background-color 0.3s;
+        }
+        .news-table th {
+            padding: 10px;
+            background-color: transparent;
+        }
+        
+        .news-table td a {
+    color: white; /* Set font color to white */
+    text-decoration: none; /* Remove default underline */
+}
+.news-table td a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
+
+
+        .good-news-table {
+            border-color: green;
+        }
+        .bad-news-table {
+            border-color: red;
+        }
+        .news-table td:hover {
+            background-color: rgba(0, 128, 0, 0.2);
+        }
+        .bad-news-table td:hover {
+            background-color: rgba(128, 0, 0, 0.2);
+        }
+    </style>
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+    <div class="container" style="text-align: center; z-index: 1;">
+        <h1>Stock Analysis Dashboard</h1>
+        <a href="login.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Login</a>
+        <a href="register.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Sign Up</a>
+        <a href="dashboard.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Dashboard</a>
+        <a href="pk_index.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Sentiment Analysis</a>
+        <a href="ultimateTopNews.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Editorial Review</a>
+    </div>
+    <div>
+        <canvas id="stockChart"></canvas>
+    </div>
+    <br>
+    <br>
+    <table class="stock-table">
+        <!-- Five rows with four columns each -->
+        <tr>
+            <td><a href="" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Stocks --></a></td>
+            <td><a href="amazon.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Amazon</a></td>
+            <td><a href="amd.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">AMD</a></td>
+            <td><a href="apple.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Apple</a></td>
+        </tr>
+        <tr>
+            <td><a href="AT&T.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">AT&T</a></td>
+            <td><a href="goldmansachs.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Goldman Sachs</a></td>
+            <td><a href="ibm.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">IBM</a></td>
+            <td><a href="johnson.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Johnson & Johnson</a></td>
+        </tr>
+        <tr>
+            <td><a href="meta.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Meta</a></td>
+            <td><a href="microsoft.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Microsoft</a></td>
+            <td><a href="netflix.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Netflix</a></td>
+            <td><a href="phizer.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Phizer</a></td>
+        </tr>
+        <tr>
+            <td><a href="sony.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Sony</a></td>
+            <td><a href="tesla.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Tesla</a></td>
+            <td><a href="verizon.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Verizon</a></td>
+            <td><a href="walmart.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Walmart</a></td>
+        </tr>
+    </table>
+    <div style="display: flex; justify-content: space-between; width: 80%; margin-top: 20px;">
+        <table class="news-table good-news-table">
+            <tr><th>Bullish News</th></tr>
+            <!-- Four dummy rows for good news links -->
+            <tr><td><a href="https://www.investors.com/research/ibd-stock-analysis/google-stock-finds-its-muse-as-google-bard-unleashes-new-ai-era/">Google Bard Unveils Major AI Update. Google Stock Takes Flight.
+            </a></td></tr>
+            <tr><td><a href="https://www.fool.com/investing/2024/01/21/can-alphabet-stock-hit-200-in-2024/">Can Alphabet Stock Hit $200 in 2024?</a></td></tr>
+            <tr><td><a href="https://www.nasdaq.com/articles/alphabet-stock-is-still-a-buy-with-most-analysts-as-its-fcf-could-make-googl-worth-over-">Alphabet Stock Is Still a Buy With Most Analysts, As Its FCF Could Make GOOGL Worth Over $220
+            </a></td></tr>
+            
+
+
+
+        </table>
+        <table class="news-table bad-news-table">
+            <tr><th>Bearish News</th></tr>
+            <!-- Four dummy rows for bad news links -->
+            <tr><td><a href="https://www.businessinsider.com/google-ceo-says-more-layoffs-to-come-2024-1">Google CEO Sundar Pichai says the tech giant's staff must brace for more job cuts in 2024</a></td></tr>
+            <tr><td><a href="https://finance.yahoo.com/news/jeff-bezos-held-60-meetings-150404862.html">Jeff Bezos Held 60 Meetings To Secure Amazon Investors But 38 Declined His Offer Of $50,000 For 1% Ownership — A Decision That Could Have Made Them Over $15 Billion Today</a></td></tr>
+            <tr><td><a href="https://www.cbsnews.com/news/google-layoffs-2024-sundar-pichai/">Google CEO warns of more layoffs in 2024 amid artificial intelligence push
+            </a></td></tr>
+            <tr><td><a href="https://finance.yahoo.com/news/why-investors-sold-off-alphabet-053339169.html">Here’s Why Investors Sold Off Alphabet (GOOG)
+            </a></td></tr>
+
+
+
+
+
+
+    
+
+    <script>
+        const stockLabels = ["11:35", "11:40", "11:45", "11:50", "11:55", "12:00", "12:05", "12:10", "12:15", "12:20", "12:25", "12:30", "12:35", "12:40", "12:45", "12:50", "12:55", "13:00", "13:05", "13:10", "13:15", "13:20", "13:25", "13:30", "13:35", "13:40", "13:45", "13:50", "13:55", "14:00", "14:05", "14:10", "14:15", "14:20", "14:25", "14:30", "14:35", "14:40", "14:45", "14:50", "14:55", "15:00", "15:05", "15:10", "15:15", "15:20", "15:25", "15:30", "15:35", "15:40", "15:45", "15:50", "15:55", "16:00", "16:05", "16:10", "16:15", "16:20", "16:25", "16:30", "16:35", "16:40", "16:45", "16:50", "16:55", "17:00", "17:05", "17:10", "17:15", "17:20", "17:25", "17:30", "17:35", "17:40", "17:45", "17:50", "17:55", "18:00", "18:05", "18:10", "18:15", "18:20", "18:25", "18:30", "18:35", "18:40", "18:45", "18:50", "19:00", "19:05", "19:10", "19:15", "19:20", "19:25", "19:30", "19:35", "19:40", "19:45", "19:50", "19:55"];
+        const stockPrices = [147.9100, 148.0000, 147.9700, 148.0000, 147.9100, 147.9000, 147.9600, 147.9800, 147.9800, 147.9600, 147.9300, 147.9600, 147.9300, 147.9650, 147.9650, 147.9200, 147.8800, 147.9800, 147.9800, 147.9700, 147.8800, 147.9700, 147.8800, 147.8900, 147.9700, 147.8800, 148.0300, 148.0600, 148.0500, 148.0800, 148.1000, 148.0900, 148.0700, 148.0300, 148.0200, 148.0650, 148.0900, 148.1500, 148.1500, 148.1000, 148.1100, 148.0700, 148.1290, 148.0700, 148.1050, 148.1500, 148.1200, 148.0500, 147.9700, 147.9650, 147.6850, 147.5900, 147.6350, 147.6250, 147.6100, 147.6450, 147.6700, 147.7650, 147.7200, 147.6200, 147.5500, 147.4750, 147.2970, 147.2740, 147.2850, 147.3200, 147.2600, 147.4400, 147.3700, 147.1800, 147.2100, 147.0250, 147.2500, 147.3100, 147.1100, 147.1400, 147.2900, 146.9300, 147.2200, 147.2800, 147.0950, 147.0500, 147.0650, 147.3000, 147.2750, 147.3450, 147.3250, 147.3700
+]
+const ctx = document.getElementById('stockChart').getContext('2d');
+    const stockChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: stockLabels,
+            datasets: [{
+                label: 'Alphabet Stock Price',
+                data: stockPrices,
+                fill: false,
+                borderColor: 'rgb(255,0, 0)',
+                tension: 0
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'minute',
+                        tooltipFormat: 'YYYY-MM-DD HH:mm'
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: false
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Price (USD)'
+                    }
+                }]
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            animation: {
+                duration: 0
+            }
+        }
+    });
+
+    const canvas = document.getElementById('stockChart');
+    canvas.addEventListener('click', (event) => {
+        const activePoints = stockChart.getElementsAtEventForMode(event, 'point', stockChart.options);
+        if (activePoints.length > 0) {
+            const clickedPoint = activePoints[0];
+            const label = stockLabels[clickedPoint.index];
+            const price = stockPrices[clickedPoint.index];
+
+            // You can replace this alert with your custom logic to display information
+            alert(`Clicked Point - Time: ${label}, Price: ${price}`);
+        }
+    });
+
+    // Adding click functionality to navigation buttons
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Replace with the desired behavior when a button is clicked
+            alert(`Clicked: ${button.innerText}`);
+        });
+    });
+    </script>
+</body>
+</html>

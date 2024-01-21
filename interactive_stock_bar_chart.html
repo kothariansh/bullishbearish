@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Price Chart</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+#stockChart {
+    max-width: 1000px;
+    margin: 20px auto;
+}
+/* Set the background color of the chart area to black */
+.chart-area {
+    background-color: black;
+    padding: 15px;
+    border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="chart-area">
+    <canvas id="stockChart" width="1200" height="600"></canvas>
+</div>
+
+<script>
+const stockLabels = ["2024-01-19 11:35:00", /* ... your labels ... */, "2024-01-19 19:55:00"];
+const stockPrices = [169.845, /* ... your prices ... */, 171.7];
+
+const ctx = document.getElementById('stockChart').getContext('2d');
+const stockChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: stockLabels,
+        datasets: [{
+            label: 'IBM Stock Price',
+            data: stockPrices,
+            borderColor: 'green', // Line color green
+            borderWidth: 2,
+            tension: 0.1,
+            pointRadius: 0, // Remove points from the line
+            pointHitRadius: 10,
+            fill: false // No fill below the line
+        }]
+    },
+    options: {
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'minute',
+                    tooltipFormat: 'YYYY-MM-DD HH:mm',
+                    displayFormats: {
+                        minute: 'HH:mm'
+                    }
+                },
+                grid: {
+                    display: false // Hide grid lines
+                },
+                ticks: {
+                    color: 'white' // x-axis labels color white
+                }
+            },
+            y: {
+                beginAtZero: false,
+                grid: {
+                    display: false // Hide grid lines
+                },
+                ticks: {
+                    color: 'white' // y-axis labels color white
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false // Hide the legend
+            }
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        },
+        maintainAspectRatio: false
+    }
+});
+</script>
+
+</body>
+</html>

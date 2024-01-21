@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #stockChart {
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <canvas id="stockChart"></canvas>
+</div>
+
+<script>
+const stockLabels = ["2024-01-19 11:35:00", /* ... more labels ... */, "2024-01-19 19:55:00"];
+const stockPrices = [169.845, /* ... more prices ... */, 171.7];
+
+const ctx = document.getElementById('stockChart').getContext('2d');
+const stockChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: stockLabels,
+        datasets: [{
+            label: 'IBM Stock Price',
+            data: stockPrices,
+            fill: false,
+            borderColor: 'green', // Line color green
+            borderWidth: 2,
+            tension: 0.1
+        }]
+    },
+    options: {
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'minute',
+                    tooltipFormat: 'YYYY-MM-DD HH:mm'
+                },
+                title: {
+                    display: true,
+                    text: 'Time'
+                },
+                grid: {
+                    display: false, // Remove x-axis grid
+                    color: 'white'  // Grid color white
+                },
+                ticks: {
+                    color: 'white' // x-axis labels color white
+                }
+            },
+            y: {
+                beginAtZero: false,
+                title: {
+                    display: true,
+                    text: 'Price (USD)'
+                },
+                grid: {
+                    display: false, // Remove y-axis grid
+                    color: 'white'  // Grid color white
+                },
+                ticks: {
+                    color: 'white' // y-axis labels color white
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'white' // Legend labels color white
+                }
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += '$' + context.parsed.y.toFixed(2);
+                        }
+                        return label;
+                    }
+                }
+            }
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        },
+        maintainAspectRatio: false,
+        elements: {
+            line: {
+                backgroundColor: 'black' // Line background color black
+            },
+            point:{
+                radius: 0 // Hide points
+            }
+        },
+        layout: {
+            padding: {
+                left: 10,
+                right: 25,
+                top: 20,
+                bottom: 10
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        #stockChart {
+            max-width: 3000px;
+            width: 300%;
+            height: auto;
+        }
+        .stock-table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .stock-table td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid white;
+        }
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin-top: 20px;
+        }
+        .news-table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 60%;
+            margin: 0 10px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            overflow-y: auto;
+            border: 2px solid transparent;
+            padding: 1000px;
+        }
+        .news-table td {
+            text-align: center; /* Center-align text in table cells */
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 4px;
+    background-color: transparent;
+    color: white; /* Ensuring text color is white */
+    transition: background-color 0.3s;
+        }
+        .news-table th {
+            padding: 10px;
+            background-color: transparent;
+        }
+        
+        .news-table td a {
+    color: white; /* Set font color to white */
+    text-decoration: none; /* Remove default underline */
+}
+.news-table td a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
+
+
+        .good-news-table {
+            border-color: green;
+        }
+        .bad-news-table {
+            border-color: red;
+        }
+        .news-table td:hover {
+            background-color: rgba(0, 128, 0, 0.2);
+        }
+        .bad-news-table td:hover {
+            background-color: rgba(128, 0, 0, 0.2);
+        }
+    </style>
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+    <div class="container" style="text-align: center; z-index: 1;">
+        <h1>Stock Analysis Dashboard</h1>
+        <a href="login.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Login</a>
+        <a href="register.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Sign Up</a>
+        <a href="dashboard.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Dashboard</a>
+        <a href="pk_index.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Sentiment Analysis</a>
+        <a href="ultimateTopNews.html" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" style="color: white; text-decoration: none; display: inline-block; margin: 10px; padding: 10px 20px; border: 1px solid white; border-radius: 4px; transition: background-color 0.3s, color 0.3s, transform 0.3s; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);">Editorial Review</a>
+    </div>
+    <div>
+        <canvas id="stockChart"></canvas>
+    </div>
+    <br>
+    <br>
+    <table class="stock-table">
+        <!-- Five rows with four columns each -->
+        <tr>
+            <td><a href="" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Stocks --></a></td>
+            <td><a href="alphabet.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Alphabet</a></td>
+            <td><a href="amazon.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Amazon</a></td>
+            <td><a href="amd.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">AMD</a></td>
+        </tr>
+        <tr>
+            <td><a href="apple.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Apple</a></td>
+            <td><a href="at&t.txt" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">AT&T</a></td>
+            <td><a href="goldmansachs.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Goldman Sachs</a></td>
+            <td><a href="ibm.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">IBM</a></td>
+        </tr>
+        <tr>
+            <td><a href="meta.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Meta</a></td>
+            <td><a href="microsoft.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Microsoft</a></td>
+            <td><a href="netflix.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Netflix</a></td>
+            <td><a href="phizer.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Phizer</a></td>
+        </tr>
+        <tr>
+            <td><a href="sony.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Sony</a></td>
+            <td><a href="tesla.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Tesla</a></td>
+            <td><a href="verizon.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Verizon</a></td>
+            <td><a href="walmart.html" style="color: white; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Walmart</a></td>
+        </tr>
+    </table>
+    <div style="display: flex; justify-content: space-between; width: 80%; margin-top: 20px;">
+        <table class="news-table good-news-table">
+            <tr><th></th></tr>
+
+          
+
+         
+
+
+
+        </table>
+        <table class="news-table bad-news-table">
+            <tr><th>Bearish News</th></tr>
+            <!-- Four dummy rows for bad news links -->
+            <tr><td><a href="https://www.marketwatch.com/data-news/johnson-johnson-stock-rises-thursday-still-underperforms-market-391e9301-e4d4c7b94eb7">Johnson & Johnson stock rises Thursday, still underperforms market
+
+            </a></td></tr>
+            <tr><td><a href="https://finance.yahoo.com/news/wall-streets-insights-key-metrics-175600811.html">Wall Street's Insights Into Key Metrics Ahead of Johnson & Johnson (JNJ) Q4 Earnings
+                <tr><td><a href="https://apnews.com/article/johnson-investigation-south-africa-pharmaceutical-eb8525424c07f6c8e6645fa036cdf284">Big Pharma’s Johnson & Johnson under investigation in South Africa over ‘excessive’ drug prices
+
+
+
+            </a></td></tr>
+
+
+        </table>
+
+    <script>
+        const stockLabels = ["11:35", "11:40", "11:45", "11:50", "11:55", "12:00", "12:05", "12:10", "12:15", "12:20", "12:25", "12:30", "12:35", "12:40", "12:45", "12:50", "12:55", "13:00", "13:05", "13:10", "13:15", "13:20", "13:25", "13:30", "13:35", "13:40", "13:45", "13:50", "13:55", "14:00", "14:05", "14:10", "14:15", "14:20", "14:25", "14:30", "14:35", "14:40", "14:45", "14:50", "14:55", "15:00", "15:05", "15:10", "15:15", "15:20", "15:25", "15:30", "15:35", "15:40", "15:45", "15:50", "15:55", "16:00", "16:05", "16:10", "16:15", "16:20", "16:25", "16:30", "16:35", "16:40", "16:45", "16:50", "16:55", "17:00", "17:05", "17:10", "17:15", "17:20", "17:25", "17:30", "17:35", "17:40", "17:45", "17:50", "17:55", "18:00", "18:05", "18:10", "18:15", "18:20", "18:25", "18:30", "18:35", "18:40", "18:45", "18:50", "19:00", "19:05", "19:10", "19:15", "19:20", "19:25", "19:30", "19:35", "19:40", "19:45", "19:50", "19:55"];
+        const stockPrices = [161.6900, 161.5000, 161.5600, 161.6800, 161.5000, 161.5900, 161.5000, 161.5500, 161.5600, 161.5500, 161.5500, 161.5500, 161.5180, 161.5500, 161.6800, 161.5900, 161.6700, 161.5500, 161.4200, 161.4200, 161.8500, 161.6700, 161.6800, 161.6800, 161.7100, 161.8300, 161.7150, 161.7100, 161.8300, 161.7700, 161.7600, 161.7900, 161.7800, 161.6900, 161.7400, 161.6100, 161.6000, 161.6400, 161.6350, 161.6250, 161.5400, 161.2800, 161.2500, 161.1300, 161.0100, 161.0300, 161.1100, 161.1530, 161.0200, 161.1000, 161.0200, 160.9400, 160.9100, 160.9700, 160.9400, 161.0800, 161.0700, 161.0300, 160.9790, 160.9000, 160.7900, 160.8800, 160.8400, 160.9900, 160.9100, 160.9900, 161.0600, 161.0800, 161.0700, 161.0300, 161.1100, 161.7100, 161.8300, 161.7150, 161.7100, 161.8300, 161.7700, 161.7600, 161.7900, 161.7800, 161.6900, 161.7400, 161.6100, 161.6000, 161.6400, 161.6350, 161.6250, 161.5400, 161.2800, 161.2500, 161.1300, 161.0100, 161.0300, 161.1100, 161.1530, 161.0200, 161.1000, 161.0200, 160.9400, 160.9100, 160.9700, 160.9400, 161.0800, 161.0700, 161.0300, 160.9790, 160.9000, 160.7900, 160.8800, 160.8400, 160.9900, 160.9100, 160.9900, 161.0600, 161.0800, 161.0700, 161.0300, 161.1100, 161.1530, 161.0200, 161.1000, 161.0200, 160.9400, 160.9100, 160.9700, 160.9400, 161.0800, 161.0700, 161.0300, 160.9790, 160.9000, 160.7900, 160.8800, 160.8400, 160.9900, 160.9100, 160.9900, 161.0600, 161.9, 161.9, 161.9, 162]; 
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        const stockChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: stockLabels,
+                datasets: [{
+                    label: 'Johnson & Johnson Stock Price',
+                    data: stockPrices,
+                    fill: false,
+                    borderColor: 'rgb(255,0, 0)', /* Change the line color to green */
+                    tension: 0 /* Remove line tension */
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            unit: 'minute',
+                            tooltipFormat: 'YYYY-MM-DD HH:mm'
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Time'
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: false
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Price (USD)'
+                        }
+                    }]
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                animation: {
+                    duration: 0 // Remove all animations
+                }
+            }
+        });
+    </script>
+</body>
+</html>
