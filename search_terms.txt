@@ -12,3 +12,6 @@ Verizon
 Pfizer
 AT&T
 IBM
+Sony
+Goldman
+Nintendo
