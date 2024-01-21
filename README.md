@@ -3,11 +3,13 @@ In today's dynamic stock market, information moves at lightning speed, leaving i
 
 Introducing **BullishBearish**, your go-to platform for staying ahead in the fast-paced world of finance. With **BullishBearish**, you're not just informed, you're empowered.
 
+BullishBearish is a clean and minimalist website designed for easy navigation and seamless user experience. It is the next revolutionary finance app where it is accessible to everyone, including the elderly. 
+
 Get updates on the latest news impacting your favorite companies, tailored to your preferences. Our cutting-edge machine learning algorithm analyzes news articles, providing you with insights on whether the market sentiment is bullish or bearish.
 
 Customize your experience by selecting the companies you want to follow, and receive timely notifications that matter to you. Whether you're a seasoned investor or just starting, BullishBearish is your trusted companion for making informed decisions in the stock market.
 
-Use our Sentiment machine learning model model to predict vulnerabilities in different stock. See changes in different stocks. Find the current trending stocks, spearheaded by our algorithm and web-scraper. BullishBearish is your go to for the most up to date for all information and allows the you to make better and more informed decisions.
+Use our Sentiment machine learning model model to predict vulnerabilities in different stock. See changes in different stocks. Find the current trending stocks, spearheaded by our algorithm and web-scraper. BullishBearish is your go to for the most up to date for all information and allows the you to make better and more informed decisions. Also find how news can possibly impact other companies within the same industry with our analyzer.
 
 Don't just react to the market, anticipate it with BullishBearish. Elevate your financial journey today.
 
