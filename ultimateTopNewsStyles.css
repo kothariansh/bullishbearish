@@ -1,0 +1,92 @@
+body, html {
+    margin: 0;
+    height: 100%;
+    background-color: black;
+    color: white;
+    font-family: 'Lobster', sans-serif; /* Use Lobster font */
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: stretch;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.stock-block {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    flex: calc(50% - 20px);
+    margin: 10px;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+}
+
+.stock-block:hover {
+    transform: scale(1.05);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.stock-block.positive {
+    border-color: #00ff00;
+}
+
+.stock-block.negative {
+    border-color: #ff0000;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid white;
+    border-radius: 4px;
+    transition: transform 0.3s;
+}
+
+a:hover {
+    transform: translateY(-4px);
+}
+
+.header {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.floating-links {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.floating-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: transform 0.3s;
+}
+
+.floating-links a:hover {
+    transform: translateY(-4px);
+}
+
+.green-symbol {
+    color: #00ff00;
+}
+
+.red-symbol {
+    color: #ff0000;
+}
+
+/* White background and black text for the "Read Articles" box when hovered */
+.article-link:hover {
+    background-color: white;
+    color: black;
+}
