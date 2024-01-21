@@ -5,7 +5,7 @@ import time
 
 visited_urls = set()  # Keep track of visited URLs to avoid duplicates
 
-def scrape_and_store_articles(url, search_term, results_file, max_depth=3, timeout=15):
+def scrape_and_store_articles(url, search_term, results_file, max_depth=3, timeout=3):
     global visited_urls
 
     try:
