@@ -38,7 +38,7 @@ def scrape_and_store_articles(url, search_term, results_file, max_depth=3, timeo
                         if search_term.lower() in headline.lower():
                             # Store the filtered article link in the results file
                             with open(results_file, "a") as file:
-                                file.write(f"{search_term} - {absolute_url}\n")
+                                file.write(f"{search_term} ; {absolute_url}\n")
 
                             # Mark the current URL as visited
                             visited_urls.add(absolute_url)
