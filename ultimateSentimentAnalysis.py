@@ -1,69 +1,85 @@
-import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import spacy
 from transformers import pipeline
-from newspaper import Article
+from collections import Counter
+import re  # Import the re module for regular expressions
 
-# Load pre-trained sentiment analysis model
-sentiment_analysis = pipeline('sentiment-analysis')
+# Download spaCy model if not already installed
+try:
+    nlp = spacy.load('en_core_web_sm')
+except OSError:
+    import subprocess
+    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
+    nlp = spacy.load('en_core_web_sm')
 
-# Function to analyze sentiment for an article link
-def analyze_article_sentiment(company, article_link):
-    try:
-        # Download and parse the article
-        article = Article(article_link)
-        article.download()
-        article.parse()
+def get_article_text(url):
+    # Fetch the HTML content of the article
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Get the article text
-        article_text = article.text
+    # Extract text content from the article
+    article_text = ' '.join([p.get_text() for p in soup.find_all('p')])
 
-        # Limit the article text to the model's maximum sequence length
-        max_sequence_length = 512
-        truncated_text = article_text[:max_sequence_length]
+    return article_text
 
-        # Analyze sentiment for the truncated article
-        result = sentiment_analysis(truncated_text)
-        label = result[0]['label']
-        score = result[0]['score']
+def extract_companies_from_text(text):
+    # Process the text using spaCy
+    doc = nlp(text)
 
-        sentiment = "positive" if label == "POSITIVE" else "negative"
+    # Extract organizations (companies) from the processed text
+    companies = [ent.text for ent in doc.ents if ent.label_ == 'ORG']
 
-        print(f"Company: {company}")
-        print(f"Article Link: {article_link}")
-        print(f"Sentiment: {sentiment} (Score: {score:.2f})\n")
+    return companies
 
-        return sentiment
+def analyze_impact(article_text):
+    # Load the pre-trained BERT sentiment analysis model
+    sentiment_model = pipeline("sentiment-analysis")
 
-    except Exception as e:
-        print(f"Error analyzing sentiment for {article_link}: {str(e)}")
-        # Continue to the next iteration
-        return None
+    # Split the article text into segments that fit within the model's limit
+    max_segment_length = 512
+    article_segments = [article_text[i:i+max_segment_length] for i in range(0, len(article_text), max_segment_length)]
 
-# Function to parse and write URLs to an Excel file
-def parse_and_write_to_excel(input_file, output_excel):
-    data = {'Company': [], 'Link': [], 'Sentiment': []}
+    # Analyze sentiment of each segment
+    sentiment_results = []
+    for segment in article_segments:
+        segment_results = sentiment_model(segment)
+        sentiment_results.extend([(segment, result['label']) for result in segment_results])
 
-    with open(input_file, 'r') as infile:
-        lines = infile.readlines()
+    # Extract companies from each statement
+    companies_impacted = []
+    for segment, label in sentiment_results:
+        companies = extract_companies_from_text(segment)
+        companies_impacted.extend(companies)
 
-    # Parse and extract company name and URLs from each line
-    for line in lines:
-        line_elements = line.split(';')
-        if len(line_elements) > 1:
-            company = line_elements[0].strip()
-            link = line_elements[1].strip()
-            sentiment = analyze_article_sentiment(company, link)
-            data['Company'].append(company)
-            data['Link'].append(link)
-            data['Sentiment'].append(sentiment)
+    return companies_impacted
 
-    # Create a DataFrame
-    df = pd.DataFrame(data)
+if __name__ == "__main__":
+    # Open "impact.txt" in append mode
+    with open('impact.txt', 'a') as impact_file:
+        # Read URLs from the input file and process each one
+        with open('results.txt', 'r') as file:
+            for line in file:
+                # Split the line by semicolon to get elements
+                elements = line.strip().split(';')
+                
+                # Get the URL from the second element
+                article_url = elements[1]
 
-    # Write the DataFrame to an Excel file
-    df.to_excel(output_excel, index=False)
+                # Get the text content of the article
+                article_text = get_article_text(article_url)
 
-# Read the links from 'results.txt' and store them in 'article.xlsx'
-input_file_path = 'results.txt'
-output_excel_path = 'article.xlsx'
+                # Analyze the impact of the article and extract companies for each segment
+                impacted_companies = analyze_impact(article_text)
 
-parse_and_write_to_excel(input_file_path, output_excel_path)
+                # Rank companies by frequency
+                company_counts = Counter(impacted_companies)
+                ranked_companies = sorted(company_counts.items(), key=lambda x: x[1], reverse=True)
+
+                # Write results to "impact.txt" on a new line and flush the file
+                impact_file.write(f"{article_url} - {', '.join([f'{company}: {count} times' for company, count in ranked_companies])}\n")
+                impact_file.flush()
+
+                print(f"Results for {article_url} have been appended to impact.txt")
+
+    print("All results have been written to impact.txt")
