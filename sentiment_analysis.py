@@ -1,79 +1,50 @@
-import requests
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-import time
+from transformers import pipeline
+from newspaper import Article
 
-visited_urls = set()  # Keep track of visited URLs to avoid duplicates
+# Load pre-trained sentiment analysis model
+sentiment_analysis = pipeline('sentiment-analysis')
 
-def scrape_and_store_articles(url, search_term, results_file, max_depth=3, timeout=15):
-    global visited_urls
-
+# Function to analyze sentiment for an article link
+def analyze_article_sentiment(article_link):
     try:
-        start_time = time.time()
-        
-        # Send a GET request to the URL with timeout
-        response = requests.get(url, timeout=timeout)
+        # Download and parse the article
+        article = Article(article_link)
+        article.download()
+        article.parse()
 
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            # Parse the HTML content using BeautifulSoup
-            soup = BeautifulSoup(response.text, 'html.parser')
+        # Get the article text
+        article_text = article.text
 
-            # Find all the anchor tags (links) in the HTML
-            links = soup.find_all('a', href=True)
+        # Limit the article text to the model's maximum sequence length
+        max_sequence_length = 512
+        truncated_text = article_text[:max_sequence_length]
 
-            # Extract and filter the article links
-            for link in links:
-                href = link.get('href')
+        # Analyze sentiment for the truncated article
+        result = sentiment_analysis(truncated_text)
+        label = result[0]['label']
+        score = result[0]['score']
 
-                # Filter out useless links (adjust as needed)
-                if href:
-                    # Make relative URLs absolute
-                    absolute_url = urljoin(url, href)
+        sentiment = "positive" if label == "POSITIVE" else "negative"
 
-                    # Check if the link has already been visited
-                    if absolute_url not in visited_urls:
-                        # Check if the headline contains the search term
-                        headline = link.get_text().strip()
-                        if search_term.lower() in headline.lower():
-                            # Store the filtered article link in the results file
-                            with open(results_file, "a") as file:
-                                file.write(f"{search_term} - {absolute_url}\n")
+        print(f"Article Link: {article_link}")
+        print(f"Sentiment: {sentiment} (Score: {score:.2f})\n")
 
-                            # Mark the current URL as visited
-                            visited_urls.add(absolute_url)
-
-                            # Continue scraping recursively
-                            if max_depth > 0:
-                                scrape_and_store_articles(absolute_url, search_term, results_file, max_depth=max_depth - 1)
-
-        elapsed_time = time.time() - start_time
-        print(f"Elapsed time: {elapsed_time} seconds")
-
-    except requests.Timeout:
-        print(f"Request to {url} timed out after {timeout} seconds. Skipping to the next search term.")
-    except KeyboardInterrupt:
-        print("\nScraping interrupted by keyboard. Data saved to results.txt")
-        raise  # Re-raise the KeyboardInterrupt to stop the program
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Error analyzing sentiment for {article_link}: {str(e)}")
+        # Continue to the next iteration
 
-if __name__ == "__main__":
-    # Read search terms from a txt file
-    with open("search_terms.txt", "r") as terms_file:
-        search_terms = [term.strip() for term in terms_file]
+# Example article links
+file_path = 'article.txt'  # Replace 'your_file.txt' with the actual file path
 
-    # List of URLs to scrape
-    urls_to_scrape = [
-        'https://www.google.com/finance/'
-    ]
+# Read the file and store each line in an array
+with open(file_path, 'r') as file:
+    lines_array = [line.strip() for line in file if 'company_name' in line]
 
-    # Scrape articles and store links for each search term until a keyboard interrupt
-    try:
-        results_file = "results.txt"
-        for url in urls_to_scrape:
-            for term in search_terms:
-                scrape_and_store_articles(url, term, results_file)
-                time.sleep(2)  # Add a 2-second delay between requests to avoid being blocked
-    except KeyboardInterrupt:
-        pass  # Handle KeyboardInterrupt gracefully
+# Display the array of lines
+print(lines_array)
+
+article_links = lines_array
+
+# Analyze sentiment for each article link
+for link in article_links:
+    analyze_article_sentiment(link)
