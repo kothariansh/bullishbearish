@@ -1,4 +1,4 @@
-#BullishBearish
+# BullishBearish
 In today's dynamic stock market, information moves at lightning speed, leaving investors struggling to keep up. Human processing speed often lags behind, causing delays in reacting to market shifts and potentially missing crucial opportunities. This challenge hampers effective decision-making and undermines the ability to stay ahead in the financial landscape. However, news is often an indicator of fluctuations in stock and is a valuable tool in the aid of predicting stock, but with some articles sometimes taking up to _20 minutes_ to read, these 20 mins can make or break your balance.
 
 Introducing **BullishBearish**, your go-to platform for staying ahead in the fast-paced world of finance. With **BullishBearish**, you're not just informed, you're empowered.
