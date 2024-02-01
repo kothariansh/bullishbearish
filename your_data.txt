@@ -1,4 +1,0 @@
-Microsoft - Amazon,0; Meta,-1; Apple,-4; Tesla,-1
-Apple - AMD,0; Meta,1; Amazon,3; Microsoft,2; Tesla,1; AT&T,0
-AMD - Apple,-1
-Amazon - Apple,3; Microsoft,2; Walmart,2; Tesla,2
