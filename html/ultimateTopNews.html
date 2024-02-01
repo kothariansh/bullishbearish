@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="ultimateTopNewsStyles.css">
+    <title>Stocks Website</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap">
+</head>
+<body>
+    <div class="header-container">
+        <h1><b>Stock Analysis Dashboard</b></h1>
+    </div>
+    <div class="top-nav">
+        <a href="login.html" class="dashboard-button">Login</a>
+        <a href="register.html" class="dashboard-button">Sign Up</a>
+        <a href="dashboard.html" class="dashboard-button">Dashboard</a>
+        <a href="pk_index.html" class="dashboard-button">Impact Analysis</a>
+        <a href="ultimateTopNews.html" class="dashboard-button">Trending Stocks</a>
+    </div>
+    <h2 class="trending-title">Trending Stocks</h2>
+    <canvas id="bgCanvas"></canvas>
+    <div class="container">
+   
+    
+
+    <div class="container">
+        <div id="stockBlock1" class="stock-block">
+            <h2 id="stockSymbol1">Stock 1</h2>
+            <p id="percentageChange1"></p>
+            <a href="meta.html" class="article-link">View Details</a>
+        </div>
+        <div id="stockBlock2" class="stock-block">
+            <h2 id="stockSymbol2">Stock 2</h2>
+            <p id="percentageChange2"></p>
+            <a href="microsoft.html" class="article-link">View Details</a>
+        </div>
+        <div id="stockBlock3" class="stock-block">
+            <h2 id="stockSymbol3">Stock 3</h2>
+            <p id="percentageChange3"></p>
+            <a href="netflix.html" class="article-link">View Details</a>
+        </div>
+        <div id="stockBlock4" class="stock-block">
+            <h2 id="stockSymbol4">Stock 4</h2>
+            <p id="percentageChange4"></p>
+            <a href="apple.html" class="article-link">View Details</a>
+        </div>
+        <div id="stockBlock5" class="stock-block">
+            <h2 id="stockSymbol5">Stock 5</h2>
+            <p id="percentageChange5"></p>
+            <a href="phizer.html" class="article-link">View Details</a>
+        </div>
+        <div id="stockBlock6" class="stock-block">
+            <h2 id="stockSymbol6">Stock 6</h2>
+            <p id="percentageChange6"></p>
+            <a href="amazon.html" class="article-link">Read Articles</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var stocks = [
+                { symbol: "META", change: "+1.95%" },
+                { symbol: "MSFT", change: "-0.76%" },
+                { symbol: "NFLX", change: "+3.08%" },
+                { symbol: "AAPL", change: "-0.17" },
+                { symbol: "PFE", change: "+0.68%" },
+                { symbol: "AMZN", change: "-0.14%" }
+            ];
+
+            stocks.forEach(function (stock, index) {
+                var stockBlock = document.querySelector("#stockBlock" + (index + 1));
+                stockBlock.style.animation = "fadeIn 0.7s ease-in-out " + (index * 0.1) + "s"; // Apply animation with staggered delays
+                stockBlock.style.opacity = 1; // Ensure opacity is set to 1 after animation
+                stockBlock.querySelector("h2").textContent = stock.symbol;
+
+                if (stock.change.startsWith("+")) {
+                    stockBlock.classList.add("positive");
+                    stockBlock.querySelector("#percentageChange" + (index + 1)).textContent = stock.change;
+                    stockBlock.querySelector("#percentageChange" + (index + 1)).classList.add("green-symbol");
+                } else if (stock.change.startsWith("-")) {
+                    stockBlock.classList.add("negative");
+                    stockBlock.querySelector("#percentageChange" + (index + 1)).textContent = stock.change;
+                    stockBlock.querySelector("#percentageChange" + (index + 1)).classList.add("red-symbol");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

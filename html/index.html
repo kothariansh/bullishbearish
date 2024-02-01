@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Analysis Dashboard</title>
+    <style>
+        body, html {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .container {
+            text-align: center;
+            z-index: 1;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        a:hover {
+            background-color: white;
+            color: black;
+            transform: translateY(-4px); /* Pop-up effect */
+        }
+        .stock-ticker {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 2;
+        }
+        .positive { color: green; }
+        .negative { color: red; }
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+    <div class="container">
+        <h1>Stock Analysis Dashboard</h1>
+        <a href="login.html">Login</a>
+        <a href="/Users/anshk/Documents/Hackathons/Boilermake/views/register.ejs">Sign Up</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="pk_index.html">Impact Predictor</a>
+        <a href="ultimateTopNews.html">Trending Stocks</a>
+    </div>
+    <div class="stock-ticker">
+        <span id="stockSymbol">AAPL</span> | <span id="stockChange">+1.24%</span>
+    </div>
+    <script>
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+    
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    
+        let points = [];
+        const totalPoints = 300;
+        const incrementX = canvas.width / totalPoints;
+        let currentY = canvas.height * 0.8; // Starting point slightly above the bottom
+        let upwardTrend = true;
+        let graphComplete = false;
+    
+        function addPoint() {
+            let variance = upwardTrend ? -Math.random() * 20 : Math.random() * 20;
+            currentY += variance;
+    
+            // Ensure the line stays within the canvas bounds
+            currentY = Math.max(0, Math.min(canvas.height, currentY));
+    
+            points.push({ x: points.length * incrementX, y: currentY });
+    
+            // Change the trend direction occasionally for realistic fluctuations
+            if (Math.random() < 0.1) {
+                upwardTrend = !upwardTrend;
+            }
+    
+            if (points.length >= totalPoints) {
+                graphComplete = true;
+            }
+        }
+    
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            points.forEach((point, index) => {
+                if (index === 0) {
+                    ctx.moveTo(point.x, point.y);
+                } else {
+                    ctx.lineTo(point.x, point.y);
+                }
+            });
+            ctx.strokeStyle = 'green';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    
+        function animateGraph() {
+            if (!graphComplete) {
+                addPoint();
+                drawGraph();
+                requestAnimationFrame(animateGraph);
+            }
+        }
+    
+        animateGraph(); // Start the animation
+
+        function fetchStockData() {
+            var stocks = [
+                { symbol: "AAPL", change: "+1.24%" },
+                { symbol: "MSFT", change: "-0.76%" },
+                { symbol: "AMZN", change: "+2.15%" },
+                { symbol: "GOOGL", change: "-1.05%" },
+                { symbol: "FB", change: "+0.85%" }
+                // Add more stocks as needed
+            ];
+
+            var randomStock = stocks[Math.floor(Math.random() * stocks.length)];
+            document.getElementById("stockSymbol").textContent = randomStock.symbol;
+            var changeElement = document.getElementById("stockChange");
+            changeElement.textContent = randomStock.change;
+            changeElement.className = randomStock.change.startsWith("+") ? 'positive' : 'negative';
+        }
+
+        fetchStockData(); // Fetch stock data on load
+    </script>
+</body>
+</html>
